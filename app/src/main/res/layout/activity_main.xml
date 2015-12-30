@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+
+    tools:context=".activity.MainActivity">
+    <fragment android:id="@+id/gird_view"
+        android:layout_height="match_parent"
+        android:name="com.example.harshit.twopane_blank.activity.MovieList"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_marginRight="1dp"/>
+    <fragment android:id="@+id/detail_view"
+        android:layout_height="match_parent"
+        android:name="com.example.harshit.twopane_blank.activity.MovieDetail"
+        android:layout_width="0dp"
+        android:layout_weight="@integer/weightOfRight"
+        />
+
+</LinearLayout>
