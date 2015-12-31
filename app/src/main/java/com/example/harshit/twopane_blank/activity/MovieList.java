@@ -130,16 +130,19 @@ private boolean mIsDualPane;
 
 
     public void loadGrid(String sortBy) {
-        _sortBy=sortBy;
+        _sortBy = sortBy;
+        loadGrid();
+    }
+    private void loadGrid() {
         if(null!=adap && null!=gv){
         adap.notifyDataSetInvalidated();
         gv.invalidateViews();}
 
-        if(!sortBy.equals(Constants.ketForFavSort))
+        if(!_sortBy.equals(Constants.ketForFavSort))
         {
             Map<String, String> reqMap = new HashMap<>();
             reqMap.put("api_key", Constants.movieDbkey);
-            reqMap.put("sort_by", sortBy + "." + sortOrd);
+            reqMap.put("sort_by", _sortBy + "." + sortOrd);
             Date now = new Date();
             String strDate = sdf.format(now);
             String url = getResources().getString(R.string.discoverMovie);
@@ -150,17 +153,13 @@ private boolean mIsDualPane;
             return;
         }
         else{
-            PosterView temp=new PosterView();
-            output.setResults(dbH.getFavMovies());
-            favPosters=output.getResults();
-            int i=0;
-            for(Result poster:favPosters)
-            {
-                Log.e("FavLoad",i+":"+poster.getId()+":"+poster.getTitle());
-            }
-            temp.setResults(favPosters);
+            //PosterView temp=new PosterView();
+            if(null==output)
+                output=new PosterView();
 
-            populateGrid(temp);
+            output.setResults(dbH.getFavMovies());
+
+            populateGrid(output);
             return;
         }
         //RequestModel request=new RequestModel("loadGrid",getResources().getString(R.string.discoverMovie),reqMap,null);
@@ -248,22 +247,5 @@ private boolean mIsDualPane;
         }
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.sharedPrefKey, 0);
-        _sortBy=sharedPreferences.getString(Constants.settingKeyForSort,"release_date");
 
-        loadGrid(_sortBy);
-        Log.e("resume", "Activity resumed");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.sharedPrefKey,0);
-        SharedPreferences.Editor keeper=sharedPreferences.edit();
-        keeper.putString(Constants.settingKeyForSort,_sortBy);
-        keeper.commit();
-    }
 }

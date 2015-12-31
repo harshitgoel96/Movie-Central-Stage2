@@ -43,10 +43,15 @@ public class ReviewListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        if (null != reviewItems.get(position).getId()) {
+        try{
             return Long.getLong(reviewItems.get(position).getId());
         }
-        return 0;
+        catch (Exception e
+                )
+        {
+            return 0;
+        }
+        //return 0;
     }
 
     @Override

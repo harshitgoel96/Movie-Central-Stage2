@@ -7,7 +7,7 @@ import java.util.Set;
  * Created by harsh on 12/24/2015.
  */
 public class Constants {
-    public static final String movieDbkey="REMOVED";
+    public static final String movieDbkey="";
     public static String getQueryParamFromMap(Map<String,String> map){
         Set<String> keySet=map.keySet();
         StringBuilder strB=new StringBuilder("?");

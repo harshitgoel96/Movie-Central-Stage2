@@ -3,6 +3,7 @@ package com.example.harshit.twopane_blank.activity;
 import android.app.ActionBar;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -32,7 +33,7 @@ public class MainActivity extends FragmentActivity implements OnMovieSelectedLis
     MovieList gridFrag;
     View gridFragV;
     View detailFragV;
-    String sortBy="release_date";
+    String sortBy;
     private MovieDetail detailFrm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class MainActivity extends FragmentActivity implements OnMovieSelectedLis
         FragmentManager fragmentManager=getSupportFragmentManager();
         gridFrag= (MovieList)fragmentManager.findFragmentById(R.id.gird_view);
         gridFrag.setMovieSelectedListener(this);
-        gridFrag.loadGrid("release_date");
+
         detailFrm=(MovieDetail)fragmentManager.findFragmentById(R.id.detail_view);
 
     }
@@ -146,7 +147,7 @@ public class MainActivity extends FragmentActivity implements OnMovieSelectedLis
     @Override
     public void onMovieSeleted(Result object) {
         detailFragV.setVisibility(View.VISIBLE);
-        Log.e("MainActivity","Listen Success");
+        Log.e("MainActivity", "Listen Success");
         if(!mIsDualPane) {
             LinearLayout.LayoutParams layoutParamOfDet=(LinearLayout.LayoutParams)detailFragV.getLayoutParams();
             LinearLayout.LayoutParams layoutParamsOfLis=(LinearLayout.LayoutParams)gridFragV.getLayoutParams();
@@ -175,5 +176,25 @@ public class MainActivity extends FragmentActivity implements OnMovieSelectedLis
             }
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public void onResume(){
+
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.sharedPrefKey, 0);
+        sortBy=sharedPreferences.getString(Constants.settingKeyForSort,"release_date");
+        Log.e("SORT MODE", String.valueOf(sortBy));
+        Log.e("resume", "Activity resumed from main");
+        gridFrag.loadGrid(sortBy);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.sharedPrefKey,0);
+        SharedPreferences.Editor keeper=sharedPreferences.edit();
+        keeper.putString(Constants.settingKeyForSort,sortBy);
+        keeper.commit();
     }
 }
