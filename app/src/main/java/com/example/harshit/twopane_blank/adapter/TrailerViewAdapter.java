@@ -17,6 +17,8 @@ import com.example.harshit.twopane_blank.model.VideosModel;
 import com.example.harshit.twopane_blank.utils.Constants;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -63,7 +65,7 @@ public class TrailerViewAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = ((Activity) mContext).getLayoutInflater().inflate(R.layout.trailer_item, null);
         }
-
+        final String movieName=((TextView)((Activity) mContext).findViewById(R.id.detail_title)).getText().toString();
         Video vid = videoItems.get(position);
         ImageView trailerIcon = (ImageView) convertView.findViewById(R.id.trailerIcon);
         TextView trailerName = (TextView) convertView.findViewById(R.id.trailerText);
@@ -79,6 +81,21 @@ public class TrailerViewAdapter extends BaseAdapter {
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(youtubeUrl));
                         mContext.startActivity(i);
+                    }
+                }
+        );
+        final String shareText=String.format(Constants.shareTrailerMsg, movieName)+youtubeUrl;
+        convertView.setOnLongClickListener(
+
+                new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT,shareText);
+                        sendIntent.setType("text/plain");
+                        mContext.startActivity(sendIntent);
+                        return true;
                     }
                 }
         );

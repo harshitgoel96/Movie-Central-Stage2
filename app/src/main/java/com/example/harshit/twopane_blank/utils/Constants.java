@@ -71,4 +71,7 @@ public class Constants {
             ")";
 
     public static final String ketForFavSort="fav";
+    public static final String sharedPrefKey="SavedData";
+    public  static final String settingKeyForSort="SortedBy";
+    public static final String shareTrailerMsg="Hey Checkout the new Video of %s \n";
 }

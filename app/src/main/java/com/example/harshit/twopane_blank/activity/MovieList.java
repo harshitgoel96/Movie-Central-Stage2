@@ -1,6 +1,7 @@
 package com.example.harshit.twopane_blank.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -50,7 +51,7 @@ private boolean mIsDualPane;
     OnMovieSelectedListener mMovieSelectedListener=null;
 
 
-    private String _sortBy = "release_date";
+    private String _sortBy;
     private String sortOrd = "desc";
     private TextView msg;
     private GridView gv;
@@ -236,14 +237,33 @@ private boolean mIsDualPane;
     }
 
     void populateGrid(PosterView data) {
+        if(null!=data){
         adap = new PosterViewAdapter(c, data);
         gv.setAdapter(adap);
+        }
+        else{
+            showToast(
+                    "Null Object returned, Check network connection"
+            );
+        }
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.sharedPrefKey, 0);
+        _sortBy=sharedPreferences.getString(Constants.settingKeyForSort,"release_date");
+
         loadGrid(_sortBy);
         Log.e("resume", "Activity resumed");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.sharedPrefKey,0);
+        SharedPreferences.Editor keeper=sharedPreferences.edit();
+        keeper.putString(Constants.settingKeyForSort,_sortBy);
+        keeper.commit();
     }
 }
